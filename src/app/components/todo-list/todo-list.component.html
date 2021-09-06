@@ -1,0 +1,43 @@
+<h1 class="title">Todos</h1>
+<input type="text" class="todo-input"
+placeholder="What needs to be done ?"
+[(ngModel)]="todoTitle" (keyup.enter)="addTodo()">
+
+<div class="todo-item" *ngFor="let todo of todosFiltered()" @fade>
+  <div class="todo-item-left">
+    <input type="checkbox" [(ngModel)]="todo.completed" (change)="doneEdit(todo)">
+    <div *ngIf="!todo.editing; else editingTodo" class="todo-item-label"
+    [ngClass]="{ 'completed' : todo.completed }" (dblclick)="editTodo(todo)">{{ todo.title }}</div>
+    <ng-template #editingTodo>
+      <input type="text" class="todo-item-edit"
+      [(ngModel)]="todo.title" (blur)="doneEdit(todo)"
+       (keyup.enter)="doneEdit(todo)" (keyup.esc)="cancelEdit(todo)"autofocus>
+    </ng-template>
+  </div>
+  <div class="remove-item" (click)="deleteTodo(todo.id)">
+    &times;
+  </div>
+</div>
+
+<div class="extra-container">
+  <div>{{ remaining() }} items </div>
+</div>
+
+<div class="extra-container">
+  <div>
+    <button [ngClass]="{'active': filter === 'all'}" (click)="filter='all'">All</button>
+    <button [ngClass]="{'active': filter === 'active'}" (click)="filter='active'">Active</button>
+    <button [ngClass]="{'active': filter === 'completed'}" (click)="filter='completed'">Completed</button>
+  </div>
+
+  <div *ngIf="atLeastOneCompleted()">
+    <button (click)="clearCompleted()">Clear Completed</button>
+  </div>
+</div>
+<div class="Ins">
+  <Small class="instruction ">
+  <em>Double-click to edit a todo</em>
+  <br><br>
+  Created by Sam Saccone and Colin Eberhardt using Angular2
+  </Small>
+</div>
